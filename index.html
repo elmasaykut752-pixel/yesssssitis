@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruh Haline Göre Şarkı Önerisi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --mutlu: #FFD166;
+            --huzurlu: #06D6A0;
+            --uzgun: #118AB2;
+            --enerjik: #EF476F;
+            --romantik: #C44569;
+            --nostaljik: #786FA6;
+            --karanlik: #2D3047;
+            --acik-arkaplan: #F8F9FA;
+            --koyu-arkaplan: #1A1B25;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--koyu-arkaplan) 0%, var(--karanlik) 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--enerjik), var(--romantik));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 600px;
+            margin: 0 auto 25px;
+        }
+        
+        .mood-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+        
+        .mood-option {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .mood-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--color);
+        }
+        
+        .mood-option:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        
+        .mood-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--color);
+            text-shadow: 0 0 15px var(--color);
+        }
+        
+        .mood-option h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        
+        .mood-option p {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .song-results {
+            display: none;
+            margin-top: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-align: center;
+            color: var(--color);
+        }
+        
+        .song-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .song-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+            display: flex;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .song-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+        }
+        
+        .album-art {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--color) 0%, var(--karanlik) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .song-info {
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .song-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        
+        .song-artist {
+            color: #bbb;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .listen-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .listen-btn:hover {
+            background: white;
+            color: var(--color);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--color);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 20px;
+            color: #888;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .mood-selection {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .song-list {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .mood-selection {
+                grid-template-columns: 1fr;
+            }
+            
+            .mood-option {
+                padding: 20px 10px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ruh Haline Göre Şarkı Önerisi</h1>
+            <p class="tagline">Nasıl hissediyorsun? Ruh halini seç, sana en uygun şarkıları önerelim.</p>
+        </header>
+        
+        <div class="mood-selection">
+            <div class="mood-option" data-mood="mutlu" style="--color: var(--mutlu)">
+                <div class="mood-icon"><i class="fas fa-smile"></i></div>
+                <h3>Mutlu</h3>
+                <p>Enerjik ve neşeli şarkılar</p>
+            </div>
+            
+            <div class="mood-option" data-mood="huzurlu" style="--color: var(--huzurlu)">
+                <div class="mood-icon"><i class="fas fa-peace"></i></div>
+                <h3>Huzurlu</h3>
+                <p>Sakinleştirici melodiler</p>
+            </div>
+            
+            <div class="mood-option" data-mood="uzgun" style="--color: var(--uzgun)">
+                <div class="mood-icon"><i class="fas fa-sad-tear"></i></div>
+                <h3>Üzgün</h3>
+                <p>Duygusal ve içsel şarkılar</p>
+            </div>
+            
+            <div class="mood-option" data-mood="enerjik" style="--color: var(--enerjik)">
+                <div class="mood-icon"><i class="fas fa-bolt"></i></div>
+                <h3>Enerjik</h3>
+                <p>Hareketli ve tempolu şarkılar</p>
+            </div>
+            
+            <div class="mood-option" data-mood="romantik" style="--color: var(--romantik)">
+                <div class="mood-icon"><i class="fas fa-heart"></i></div>
+                <h3>Romantik</h3>
+                <p>Aşk ve romantizm dolu şarkılar</p>
+            </div>
+            
+            <div class="mood-option" data-mood="nostaljik" style="--color: var(--nostaljik)">
+                <div class="mood-icon"><i class="fas fa-history"></i></div>
+                <h3>Nostaljik</h3>
+                <p>Eski güzel günlerden şarkılar</p>
+            </div>
+        </div>
+        
+        <div class="song-results" id="songResults">
+            <h2 class="section-title" id="resultsTitle">Önerilen Şarkılar</h2>
+            <div class="song-list" id="songList">
+                <!-- Şarkılar JavaScript ile buraya eklenecek -->
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 Ruh Haline Göre Şarkı Önerisi | Her ruh haline uygun müzik</p>
+        </div>
+    </div>
+
+    <script>
+        // Ruh hallerine göre şarkı veritabanı
+        const songDatabase = {
+            mutlu: [
+                { title: "Happy", artist: "Pharrell Williams", youtube: "https://www.youtube.com/watch?v=ZbZSe6N_BXs", icon: "fas fa-smile" },
+                { title: "Can't Stop the Feeling", artist: "Justin Timberlake", youtube: "https://www.youtube.com/watch?v=ru0K8uYEZWw", icon: "fas fa-star" },
+                { title: "Good Vibrations", artist: "The Beach Boys", youtube: "https://www.youtube.com/watch?v=Eab_beh07HU", icon: "fas fa-sun" },
+                { title: "Uptown Funk", artist: "Mark Ronson ft. Bruno Mars", youtube: "https://www.youtube.com/watch?v=OPf0YbXqDm0", icon: "fas fa-hat-cowboy" },
+                { title: "Dancing Queen", artist: "ABBA", youtube: "https://www.youtube.com/watch?v=xFrGuyw1V8s", icon: "fas fa-crown" }
+            ],
+            huzurlu: [
+                { title: "Weightless", artist: "Marconi Union", youtube: "https://www.youtube.com/watch?v=UfcAVejslrU", icon: "fas fa-feather" },
+                { title: "Strawberry Swing", artist: "Coldplay", youtube: "https://www.youtube.com/watch?v=oKc-Yo5k5bs", icon: "fas fa-strawberry" },
+                { title: "Sunflower", artist: "Post Malone & Swae Lee", youtube: "https://www.youtube.com/watch?v=ApXoWvfEYVU", icon: "fas fa-sun" },
+                { title: "Three Little Birds", artist: "Bob Marley", youtube: "https://www.youtube.com/watch?v=HNBCVM4KbUM", icon: "fas fa-dove" },
+                { title: "Bloom", artist: "The Paper Kites", youtube: "https://www.youtube.com/watch?v=ahC_bgPswHU", icon: "fas fa-leaf" }
+            ],
+            uzgun: [
+                { title: "Someone Like You", artist: "Adele", youtube: "https://www.youtube.com/watch?v=hLQl3WQQoQ0", icon: "fas fa-heart-broken" },
+                { title: "Fix You", artist: "Coldplay", youtube: "https://www.youtube.com/watch?v=k4V3Mo61fJM", icon: "fas fa-wrench" },
+                { title: "The Sound of Silence", artist: "Simon & Garfunkel", youtube: "https://www.youtube.com/watch?v=4fWyzwo1xg0", icon: "fas fa-volume-mute" },
+                { title: "Hurt", artist: "Johnny Cash", youtube: "https://www.youtube.com/watch?v=vt1Pwfnh5pc", icon: "fas fa-hand-holding-heart" },
+                { title: "Say Something", artist: "A Great Big World", youtube: "https://www.youtube.com/watch?v=-2U0Ivkn2Ds", icon: "fas fa-comment" }
+            ],
+            enerjik: [
+                { title: "Eye of the Tiger", artist: "Survivor", youtube: "https://www.youtube.com/watch?v=btPJPFnesV4", icon: "fas fa-paw" },
+                { title: "Lose Yourself", artist: "Eminem", youtube: "https://www.youtube.com/watch?v=_Yhyp-_hX2s", icon: "fas fa-microphone" },
+                { title: "Thunderstruck", artist: "AC/DC", youtube: "https://www.youtube.com/watch?v=v2AC41dglnM", icon: "fas fa-bolt" },
+                { title: "Stronger", artist: "Kanye West", youtube: "https://www.youtube.com/watch?v=PsO6ZnUZI0g", icon: "fas fa-dumbbell" },
+                { title: "Titanium", artist: "David Guetta ft. Sia", youtube: "https://www.youtube.com/watch?v=JRfuAukYTKg", icon: "fas fa-shield-alt" }
+            ],
+            romantik: [
+                { title: "Perfect", artist: "Ed Sheeran", youtube: "https://www.youtube.com/watch?v=2Vv-BfVoq4g", icon: "fas fa-ring" },
+                { title: "All of Me", artist: "John Legend", youtube: "https://www.youtube.com/watch?v=450p7goxZqg", icon: "fas fa-heart" },
+                { title: "Make You Feel My Love", artist: "Adele", youtube: "https://www.youtube.com/watch?v=0put0_a--Ng", icon: "fas fa-hand-holding-heart" },
+                { title: "Can't Help Falling in Love", artist: "Elvis Presley", youtube: "https://www.youtube.com/watch?v=vGJTaP6anOU", icon: "fas fa-music" },
+                { title: "At Last", artist: "Etta James", youtube: "https://www.youtube.com/watch?v=S-cbOl96RFM", icon: "fas fa-clock" }
+            ],
+            nostaljik: [
+                { title: "Bohemian Rhapsody", artist: "Queen", youtube: "https://www.youtube.com/watch?v=fJ9rUzIMcZQ", icon: "fas fa-crown" },
+                { title: "Hotel California", artist: "Eagles", youtube: "https://www.youtube.com/watch?v=5Eyb3JVdRg0", icon: "fas fa-hotel" },
+                { title: "Imagine", artist: "John Lennon", youtube: "https://www.youtube.com/watch?v=YkgkThdzX-8", icon: "fas fa-peace" },
+                { title: "Like a Rolling Stone", artist: "Bob Dylan", youtube: "https://www.youtube.com/watch?v=IwOfCgkyEj0", icon: "fas fa-star" },
+                { title: "What a Wonderful World", artist: "Louis Armstrong", youtube: "https://www.youtube.com/watch?v=CWzrABouyeE", icon: "fas fa-globe" }
+            ]
+        };
+
+        // Ruh hali seçeneklerine tıklama olayını ekle
+        document.querySelectorAll('.mood-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const mood = this.getAttribute('data-mood');
+                showSongsForMood(mood);
+            });
+        });
+
+        // Seçilen ruh haline göre şarkıları göster
+        function showSongsForMood(mood) {
+            const songList = document.getElementById('songList');
+            const songResults = document.getElementById('songResults');
+            const resultsTitle = document.getElementById('resultsTitle');
+            
+            // Önceki şarkıları temizle
+            songList.innerHTML = '';
+            
+            // Başlık rengini ayarla
+            document.documentElement.style.setProperty('--color', `var(--${mood})`);
+            
+            // Başlık metnini güncelle
+            const moodTitles = {
+                mutlu: "Mutlu Anlar İçin Şarkılar",
+                huzurlu: "Huzurlu Anlar İçin Şarkılar",
+                uzgun: "Üzgün Anlar İçin Şarkılar",
+                enerjik: "Enerjik Anlar İçin Şarkılar",
+                romantik: "Romantik Anlar İçin Şarkılar",
+                nostaljik: "Nostaljik Anlar İçin Şarkılar"
+            };
+            
+            resultsTitle.textContent = moodTitles[mood];
+            
+            // Seçilen ruh haline uygun şarkıları al
+            const songs = songDatabase[mood];
+            
+            // Her şarkı için bir kart oluştur
+            songs.forEach(song => {
+                const songCard = document.createElement('div');
+                songCard.className = 'song-card';
+                
+                songCard.innerHTML = `
+                    <div class="album-art">
+                        <i class="${song.icon}"></i>
+                    </div>
+                    <div class="song-info">
+                        <div class="song-title">${song.title}</div>
+                        <div class="song-artist">${song.artist}</div>
+                        <a href="${song.youtube}" target="_blank" class="listen-btn">
+                            <i class="fab fa-youtube"></i> YouTube'da Dinle
+                        </a>
+                    </div>
+                `;
+                
+                songList.appendChild(songCard);
+            });
+            
+            // Sonuçları göster
+            songResults.style.display = 'block';
+            
+            // Sayfayı sonuçlara kaydır
+            songResults.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
